@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  pub:
+    container_name: app-dev-pub
+    image: app-dev-pub
+    build:
+      context: ./publisher
+      target: development
+    ports:
+      - 8082:8082
+    depends_on:
+      - redis
+    networks:
+      - mynetwork  
+  redis:
+    container_name: redis-dev-pub
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - mynetwork
+  sub:
+    container_name: app-dev-sub
+    image: app-dev-sub
+    build:
+      context: ./subscriber
+      target: development
+    ports:
+      - 8081:8081
+    depends_on: 
+        - redis
+        - pub
+    networks:
+      - mynetwork 
+networks:
+  mynetwork:
+  
